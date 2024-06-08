@@ -1,0 +1,22 @@
+[default]
+adapter = "openai_adapter"
+
+[openai_adapter]
+type = "OpenAI"
+base_url = "https://api.openai.com/v1"
+default_model = "gpt-4o"
+token = "***"
+temperature = 0.7
+top_p = 1
+max_tokens = 2048
+
+[claude_adapter]
+type = "Claude"
+base_url = "https://api.anthropic.com/v1"
+default_model = "claude-3-haiku-20240307"
+token = "***"
+temperature = 0.7
+max_tokens = 2048
+
+[logging]
+level = "info"
