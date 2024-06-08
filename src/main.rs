@@ -6,7 +6,6 @@ mod config_handler;
 mod api;
 
 use config::Config;
-use api_client::ApiClient;
 use tokio::main;
 
 #[main]
@@ -33,10 +32,9 @@ async fn main() {
     let prompt = matches.get_one::<String>("question")
         .expect("Usage: ruskgpt <your_question>");
 
-    // Get adapter config and create client
+    // Get adapter config
     let adapter_config = config_handler::get_adapter_config(&config);
-    let client = ApiClient::new(adapter_config);
 
-    // Send request and process response stream
-    api::process_response_stream(client, prompt).await;
+    // Process response stream based on adapter config
+    api::process_response_stream(adapter_config, prompt).await;
 }
