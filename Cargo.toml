@@ -1,0 +1,17 @@
+[package]
+name = "ruskgpt"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.8.14"
+reqwest = { version = "0.11", features = ["json", "stream"] }
+tokio = { version = "1", features = ["full"] }
+futures = "0.3.30"
+serde_json = "1.0.117"
+log = "0.4.21"
+flexi_logger = "0.28.1"
+chrono = "0.4.38"
