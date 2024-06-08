@@ -5,12 +5,9 @@ mod cli;
 mod config_handler;
 mod api;
 
-use config::{Config, AdapterConfig};
+use config::Config;
 use api_client::ApiClient;
 use tokio::main;
-use futures::StreamExt;
-use log::error;
-use std::path::PathBuf;
 
 #[main]
 async fn main() {

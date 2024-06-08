@@ -64,7 +64,7 @@ impl ApiClient {
         info!("Sending POST request to URL: {}", url);
         info!("Request body: {}", request_body);
 
-        let mut response = self.client.post(&url)
+        let response = self.client.post(&url)
             .header("Content-Type", "application/json")
             .header("Authorization", format!("Bearer {}", self.token))
             .json(&request_body)
