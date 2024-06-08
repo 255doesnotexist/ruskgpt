@@ -1,10 +1,10 @@
 use clap::{Command, Arg};
 
 pub fn parse_command_line_arguments() -> clap::ArgMatches {
-    Command::new("ruskgpt")
+    Command::new(env!("CARGO_PKG_NAME"))
         .version(env!("CARGO_PKG_VERSION"))
-        .author("255doesnotexist <chenyejin2004@stumail.ysu.edu.cn>")
-        .about("Yet another async AskGPT CLI client powered by Rust.")
+        .author(env!("CARGO_PKG_AUTHORS"))
+        .about(env!("CARGO_PKG_DESCRIPTION"))
         .arg(Arg::new("question")
             .help("The question to ask GPT")
             .index(1))
