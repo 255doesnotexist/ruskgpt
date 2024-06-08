@@ -2,7 +2,7 @@ use clap::{Command, Arg};
 
 pub fn parse_command_line_arguments() -> clap::ArgMatches {
     Command::new("ruskgpt")
-        .version("0.0.2")
+        .version(env!("CARGO_PKG_VERSION"))
         .author("255doesnotexist <chenyejin2004@stumail.ysu.edu.cn>")
         .about("Yet another async AskGPT CLI client powered by Rust.")
         .arg(Arg::new("question")
