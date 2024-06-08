@@ -20,6 +20,12 @@ To install `ruskgpt`, ensure you have Rust and Cargo installed. Then, run the fo
 cargo install ruskgpt
 ```
 
+Then put your OpenAI or other access token in configuration.
+
+```
+ruskgpt -e
+```
+
 ## Usage
 ### Asking a Question
 To ask a question, simply run:
@@ -49,6 +55,18 @@ You can specify a configuration file with the --config option:
 ruskgpt --config path/to/config.toml
 ```
 
+# Supported LLM APIs
+
+| API Provider | Supported | Notes |
+|--------------|-----------| ----- |
+| OpenAI        |    ✔️    | v1/chat/completions needed |
+| OpenAI Like   |    ✔️    | v1/chat/completions needed |
+| Claude classic|    ❌    | TODO |
+| ChatGLM       |    ❌    | TODO |
+| Qwen          |    ❌    | TODO |
+| Gemini        |    ❌    | TODO |
+| Deepseek      |    ❌    | TODO |
+
 ## License
 This project is licensed under the GPL-2.0 License - see the LICENSE file for details.
 
@@ -60,6 +78,9 @@ This project is licensed under the GPL-2.0 License - see the LICENSE file for de
 
 ## Inspirations
 Inspired from [praeclarum/AskGPT](https://github.com/praeclarum/AskGPT), which [Jiang Yanyan](https://jyywiki.cn/) frequently used in his OS lectures.
+
+## Supported Platforms
+- Windows, Linux, macOS (x86, amd64, arm64)
 
 ## Stars
 
