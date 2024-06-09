@@ -39,7 +39,7 @@ async fn process_openai_request(client: ApiClient, prompt: &str) {
 
 async fn process_claude_request(client: ApiClient, prompt: &str) {
     // TODO: Implement Claude specific request processing
-    todo!("Claude adapter request processing is not implemented yet.");
+    todo!("Claude adapter request processing is not implemented yet. Sooner or later. Fucked by life so not sure.");
 }
 
 async fn process_chatglm_request(client: ApiClient, prompt: &str) {
