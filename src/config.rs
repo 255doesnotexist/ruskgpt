@@ -20,7 +20,7 @@ pub struct DefaultConfig {
 pub enum AdapterConfig {
     OpenAI(OpenAIConfig),
     Claude(ClaudeConfig),
-    ChatGLM(ChatGLMConfig),
+    Zhipu(ChatGLMConfig),
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]

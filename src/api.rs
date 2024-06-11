@@ -11,8 +11,8 @@ pub async fn process_response_stream(adapter_config: AdapterConfig, prompt: &str
         AdapterConfig::Claude(config) => {
             process_claude_request(ApiClient::new(AdapterConfig::Claude(config)), prompt).await;
         },
-        AdapterConfig::ChatGLM(config) => {
-            process_chatglm_request(ApiClient::new(AdapterConfig::ChatGLM(config)), prompt).await;
+        AdapterConfig::Zhipu(config) => {
+            process_chatglm_request(ApiClient::new(AdapterConfig::Zhipu(config)), prompt).await;
         },
     }
 }

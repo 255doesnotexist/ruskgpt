@@ -35,7 +35,7 @@ impl ApiClient {
                 top_p: None, // Claude doesn't have top_p
                 max_tokens: cfg.max_tokens,
             },
-            crate::config::AdapterConfig::ChatGLM(cfg) => ApiClient {
+            crate::config::AdapterConfig::Zhipu(cfg) => ApiClient {
                 client: Client::new(),
                 base_url: cfg.base_url,
                 default_model: cfg.default_model,
