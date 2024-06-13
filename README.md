@@ -61,7 +61,7 @@ ruskgpt --config path/to/config.toml
 |--------------|-----------| ----- |
 | OpenAI        |    ✔️    | v1/chat/completions needed |
 | OpenAI Like   |    ✔️    | v1/chat/completions needed |
-| Claude        |    ✔️    | Experimental (new message API) |
+| Claude        |    half    | Experimental (new message API) |
 | ChatGLM       |    ❌    | TODO |
 | Qwen          |    ❌    | TODO |
 | Gemini        |    ❌    | TODO |
