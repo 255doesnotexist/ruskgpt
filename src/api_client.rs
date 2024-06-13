@@ -1,5 +1,5 @@
 use reqwest::Client;
-use std::error::Error;
+use std::{error::Error, pin::Pin};
 use futures::{Stream, StreamExt, TryStreamExt};
 use serde_json::Value;
 use log::{info, error};
@@ -47,7 +47,7 @@ impl ApiClient {
         }
     }
 
-    pub async fn stream_request(&self, prompt: &str) -> Result<impl Stream<Item = Result<String, reqwest::Error>>, Box<dyn Error>> {
+    pub async fn openai_stream_request(&self, prompt: &str) -> Result<impl Stream<Item = Result<String, reqwest::Error>>, Box<dyn Error>> {
         let url = format!("{}/chat/completions", self.base_url);
         let request_body = serde_json::json!({
             "model": self.default_model,
@@ -120,5 +120,46 @@ impl ApiClient {
             }
         })
         .filter(|content| futures::future::ready(content.is_ok() && !content.as_ref().unwrap().is_empty())))
+    }
+
+    pub async fn claude_stream_request(&self, prompt: &str) -> Result<Pin<Box<dyn Stream<Item = Result<String, reqwest::Error>>>>, Box<dyn Error>> {
+        let url = format!("{}/messages", self.base_url);
+        let request_body = serde_json::json!({
+            "model": self.default_model,
+            "max_tokens": self.max_tokens,
+            "messages": [
+                { "role": "user", "content": prompt }
+            ]
+        });
+
+        info!("Sending POST request to URL: {}", url);
+        info!("Request body: {}", request_body);
+
+        let response = self.client.post(&url)
+            .header("Content-Type", "application/json")
+            .header("x-api-key", &self.token)
+            .header("anthropic-version", "2023-06-01")
+            .json(&request_body)
+            .send()
+            .await?;
+
+        let req_status = response.status();
+        if !req_status.is_success() {
+            let error_text = response.text().await?;
+            error!("Error response: {:?}", error_text);
+            return Err(format!("Received error response: {:?}", req_status).into());
+        }
+
+        let response_text = response.text().await?;
+        let parsed_response: Value = serde_json::from_str(&response_text)?;
+
+        if parsed_response["type"] == "error" {
+            let error_message = parsed_response["error"]["message"].as_str().unwrap_or("Unknown error");
+            return Err(format!("API error: {}", error_message).into());
+        }
+
+        let content = parsed_response["content"][0]["text"].as_str().unwrap_or("").to_string();
+
+        Ok(Box::pin(futures::stream::once(async { Ok(content) })))
     }
 }
