@@ -1,5 +1,5 @@
 use reqwest::Client;
-use hyper::header::HeaderMap;
+use reqwest::header::{HeaderMap, CONTENT_TYPE, HeaderValue};
 use std::{error::Error, pin::Pin};
 use futures::{Stream, StreamExt, TryStreamExt};
 use serde_json::Value;
@@ -164,7 +164,7 @@ impl ApiClient {
         Ok(Box::pin(futures::stream::once(async { Ok(content) })))
     }
 
-    pub async fn zhipu_stream_request(&self, prompt: &str) -> Result<(), Box<dyn Error>> {
+    pub async fn zhipu_stream_request(&self, prompt: &str) -> Result<impl Stream<Item = Result<String, reqwest::Error>>, Box<dyn Error>> {
         let url = format!("https://open.bigmodel.cn/api/paas/v4/chat/completions");
         let request_body = serde_json::json!({
             "model": self.default_model,
@@ -196,7 +196,7 @@ impl ApiClient {
             return Err(format!("Received error response: {:?}", req_status).into());
         }
 
-        let mut byte_stream = response.bytes_stream();
+        let byte_stream = response.bytes_stream();
 
         Ok(byte_stream.map_ok(|bytes| {
             let data = String::from_utf8(bytes.to_vec()).unwrap_or_else(|_| "".to_string());
