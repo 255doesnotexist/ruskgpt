@@ -12,7 +12,7 @@ pub async fn process_response_stream(adapter_config: AdapterConfig, prompt: &str
             process_claude_request(ApiClient::new(AdapterConfig::Claude(config)), prompt).await;
         },
         AdapterConfig::Zhipu(config) => {
-            process_chatglm_request(ApiClient::new(AdapterConfig::Zhipu(config)), prompt).await;
+            process_zhipu_request(ApiClient::new(AdapterConfig::Zhipu(config)), prompt).await;
         },
     }
 }
@@ -57,7 +57,22 @@ async fn process_claude_request(client: ApiClient, prompt: &str) {
     }
 }
 
-async fn process_chatglm_request(client: ApiClient, prompt: &str) {
-    // TODO: Implement ChatGLM specific request processing
-    todo!("ChatGLM adapter request processing is not implemented yet.");
+async fn process_zhipu_request(client: ApiClient, prompt: &str) {
+    match client.zhipu_stream_request(prompt).await {
+        Ok(mut stream) => {
+            while let Some(chunk) = stream.next().await {
+                match chunk {
+                    Ok(content) => {
+                        println!("{}", content);
+                    }
+                    Err(err) => {
+                        error!("Error receiving stream chunk: {}", err);
+                    }
+                }
+            }
+        }
+        Err(err) => {
+            error!("Error processing Claude request: {}", err);
+        }
+    }
 }
