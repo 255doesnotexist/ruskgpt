@@ -4,6 +4,7 @@ mod logger;
 mod cli;
 mod config_handler;
 mod api;
+mod process_response;
 
 use config::Config;
 use tokio::main;

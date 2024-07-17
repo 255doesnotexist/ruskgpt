@@ -3,6 +3,7 @@ use std::{error::Error, pin::Pin};
 use futures::{Stream, StreamExt, TryStreamExt};
 use serde_json::Value;
 use log::{info, error};
+use crate::process_response;
 
 pub struct ApiClient {
     client: Client,
@@ -73,7 +74,9 @@ impl ApiClient {
 
         let req_status = response.status();
         if !req_status.is_success() {
-            error!("Error response: {:?}", response.text().await?);
+            let response_text = response.text().await?;
+            error!("Error response: {:?}", response_text);
+            process_response::process_openai_error_response(response_text);
             return Err(format!("Received error response: {:?}", req_status).into());
         }
 
