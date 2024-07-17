@@ -6,7 +6,7 @@ description = "Yet another async AskGPT CLI client powered by Rust."
 repository = "https://github.com/255doesnotexist/ruskgpt/"
 license = "GPL-2.0"
 keywords = ["async", "cli", "gpt", "chatgpt", "askgpt"]
-categories = ["command-line-utilities", "development-tools::code-generators"]
+categories = ["command-line-utilities", "development-tools"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
