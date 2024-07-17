@@ -1,6 +1,6 @@
 [package]
 name = "ruskgpt"
-version = "0.0.2"
+version = "0.0.3"
 authors = ["255doesnotexist <chenyejin2004@stumail.ysu.edu.cn>"]
 description = "Yet another async AskGPT CLI client powered by Rust."
 repository = "https://github.com/255doesnotexist/ruskgpt/"
