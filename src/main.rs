@@ -36,11 +36,13 @@ async fn main() {
                                 println!("  Param: {} ({}) - {} [Dangerous: {}]", param.name, param.param_type, param.description, param.dangerous.unwrap_or(false));
                             }
                         }
-                        FunctionDeclaration::Interactive { name, description, parameters } => {
+                        FunctionDeclaration::Interactive { name, description, parameters, prompt, regex } => {
                             println!("Function: {}", name);
                             println!("Description: {}", description);
                             for param in parameters {
                                 println!("  Param: {} ({}) - {} [Dangerous: {}]", param.name, param.param_type, param.description, param.dangerous.unwrap_or(false));
+                                println!("  Prompt: {}", prompt);
+                                println!("  Regex: {}", regex);
                             }
                         }
                     }

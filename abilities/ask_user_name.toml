@@ -1,0 +1,12 @@
+type = "Interactive"
+name = "ask_user_name"
+description = "Ask user's name (An example of an interactive ability)"
+prompt = "Please enter your name:"
+regex = "^[a-zA-Z\u4e00-\u9fa5]+$"
+
+[[parameters]]
+name = "name"
+param_type = "string"
+description = "The user's name"
+required = true
+dangerous = false

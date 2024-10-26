@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use std::error::Error;
 use std::fs;
 use std::path::Path;
+use regex::Regex;
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct FunctionParameter {
@@ -66,7 +67,8 @@ pub enum FunctionDeclaration {
         name: String,
         description: String,
         parameters: Vec<FunctionParameter>,
-        // 其他交互式 ability 的相关配置
+        prompt: String, // 提示用户输入
+        regex: String, // 验证用户输入的正则表达式
     },
 }
 
