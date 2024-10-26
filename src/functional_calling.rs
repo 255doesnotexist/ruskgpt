@@ -42,6 +42,14 @@ mod tests {
         let llm_params_with_all_and_long = [("all", "true"), ("long", "true")];
         let command_with_all_and_long = generate_command(function, &llm_params_with_all_and_long);
         assert_eq!(command_with_all_and_long, "ls -a -l");
+
+        // 从 abilities/eval.toml 中加载功能声明
+        let function_eval = load_function_declaration("eval").expect("Failed to load function declaration");
+
+        // 测试 eval 命令生成
+        let llm_params_eval = [("command", "echo Hello, world!")];
+        let command_eval = generate_command(function_eval, &llm_params_eval);
+        assert_eq!(command_eval, "echo Hello, world!");
     }
 }
 

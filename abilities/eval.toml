@@ -1,0 +1,11 @@
+type = "Shell"
+name = "eval"
+description = "Execute any shell command"
+command_template = "{command}"
+
+[[parameters]]
+name = "command"
+param_type = "string"
+description = "The shell command to execute"
+required = true
+dangerous = true
