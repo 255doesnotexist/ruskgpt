@@ -9,7 +9,7 @@ mod functional_calling;
 
 use api_client::ApiClient;
 use config::Config;
-use functional_calling::{list_function_declarations, load_function_declaration};
+use functional_calling::{list_function_declarations, load_function_declaration, FunctionDeclaration};
 use tokio::main;
 
 #[main]
@@ -21,14 +21,32 @@ async fn main() {
     let matches = cli::parse_command_line_arguments();
 
     // Check if list-functions flag is set
-    if matches.get_flag("list-functions") {
-        let functions = list_function_declarations().unwrap();
-        for function in functions {
-            println!("Function: {}", function.name);
-            println!("Description: {}", function.description);
-            for param in function.parameters {
-            println!("  Param: {} ({}) - {}", param.name, param.param_type, param.description);
+    let list_functions = matches.get_flag("list-functions");
+
+    if list_functions {
+        match list_function_declarations() {
+            Ok(functions) => {
+                for function in functions {
+                    match function {
+                        FunctionDeclaration::Shell { name, description, parameters, command_template } => {
+                            println!("Function: {}", name);
+                            println!("Description: {}", description);
+                            println!("Command Template: {}", command_template);
+                            for param in parameters {
+                                println!("  Param: {} ({}) - {} [Dangerous: {}]", param.name, param.param_type, param.description, param.dangerous.unwrap_or(false));
+                            }
+                        }
+                        FunctionDeclaration::Interactive { name, description, parameters } => {
+                            println!("Function: {}", name);
+                            println!("Description: {}", description);
+                            for param in parameters {
+                                println!("  Param: {} ({}) - {} [Dangerous: {}]", param.name, param.param_type, param.description, param.dangerous.unwrap_or(false));
+                            }
+                        }
+                    }
+                }
             }
+            Err(e) => eprintln!("Error listing functions: {}", e),
         }
         return;
     }
@@ -42,21 +60,6 @@ async fn main() {
 
     // Handle configuration updates or editing
     if config_handler::handle_config_edit(&matches, &mut config, &config_file_path) {
-        return;
-    }
-
-    let list_functions = matches.get_flag("list-functions");
-    if let Some(function_name) = matches.get_one::<String>("load-function") {
-        match load_function_declaration(function_name) {
-            Ok(function) => {
-                println!("Function: {}", function.name);
-                println!("Description: {}", function.description);
-                for param in function.parameters {
-                    println!("  Param: {} ({}) - {}", param.name, param.param_type, param.description);
-                }
-            }
-            Err(e) => eprintln!("Error loading function: {}", e),
-        }
         return;
     }
 

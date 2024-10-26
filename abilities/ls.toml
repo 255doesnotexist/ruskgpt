@@ -1,19 +1,27 @@
+type = "Shell"
 name = "ls"
 description = "List directory contents"
+command_template = "ls {path} {all} {long}"
+
 [[parameters]]
 name = "path"
 param_type = "string"
 description = "The path of the directory to list"
 required = true
+dangerous = false
 
 [[parameters]]
 name = "all"
 param_type = "boolean"
 description = "Include hidden files"
 required = false
+dangerous = false
+flag = "-a"
 
 [[parameters]]
 name = "long"
 param_type = "boolean"
 description = "Use a long listing format"
 required = false
+dangerous = false
+flag = "-l"
