@@ -1,4 +1,4 @@
-use clap::{Command, Arg};
+use clap::{Arg, Command};
 
 pub fn parse_command_line_arguments() -> clap::ArgMatches {
     Command::new(env!("CARGO_PKG_NAME"))
@@ -13,14 +13,15 @@ pub fn parse_command_line_arguments() -> clap::ArgMatches {
             .short('c')
             .value_parser(clap::value_parser!(String))
             .help("Path to the configuration file"))
-        .arg(Arg::new("set")
-            .long("set")
-            .value_parser(clap::value_parser!(String))
-            .help("Set a configuration value in the format key=value"))
         .arg(Arg::new("edit")
             .short('e')
             .long("edit")
             .help("Open the configuration file in the default editor")
-            .action(clap::ArgAction::SetTrue)) // 使用 SetTrue action
+            .action(clap::ArgAction::SetTrue))
+        .arg(Arg::new("list-functions")
+            .long("list-functions")
+            .short('l')
+            .help("List all available functions")
+            .action(clap::ArgAction::SetTrue))
         .get_matches()
 }

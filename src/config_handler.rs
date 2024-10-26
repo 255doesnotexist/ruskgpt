@@ -3,7 +3,7 @@ use std::fs;
 use std::path::PathBuf;
 use std::process::Command as ProcessCommand;
 use dirs_next::home_dir;
-use crate::config::{Config, AdapterConfig, DefaultConfig, OpenAIConfig, ClaudeConfig, LoggingConfig};
+use crate::config::{AdapterConfig, ChatGLMConfig, ClaudeConfig, Config, DefaultConfig, FunctionCallingConfig, LoggingConfig, OpenAIConfig};
 
 pub fn get_config_file_path(matches: &ArgMatches) -> PathBuf {
     // Check if --config is specified and use it if present
@@ -39,20 +39,18 @@ pub fn get_config_file_path(matches: &ArgMatches) -> PathBuf {
         default: DefaultConfig {
             adapter: "openai_adapter".to_string(),
         },
-        openai_adapter: AdapterConfig::OpenAI(OpenAIConfig {
-            base_url: "https://api.openai.com/v1".to_string(),
+        adapter: AdapterConfig::OpenAI(OpenAIConfig {
+            base_url: "https://api.openai.com".to_string(),
             default_model: "text-davinci-003".to_string(),
-            token: "your-openai-token".to_string(),
+            token: "".to_string(),
             temperature: 0.7,
             top_p: Some(1.0),
             max_tokens: 100,
-        }),
-        claude_adapter: AdapterConfig::Claude(ClaudeConfig {
-            base_url: "https://api.anthropic.com/v1".to_string(),
-            default_model: "claude-v1".to_string(),
-            token: "your-claude-token".to_string(),
-            temperature: 0.7,
-            max_tokens: 100,
+            function_calling_config: Some(FunctionCallingConfig {
+                mode: "ANY".to_string(),
+                allowed_function_names: None,
+                function_declaration_names: vec!["example_function".to_string()],
+            }),
         }),
         logging: LoggingConfig {
             level: "info".to_string(),
@@ -66,17 +64,7 @@ pub fn get_config_file_path(matches: &ArgMatches) -> PathBuf {
     home_config_path
 }
 
-pub fn handle_config_update_or_edit(matches: &ArgMatches, config: &mut Config, config_file_path: &PathBuf) -> bool {
-    if let Some(set_value) = matches.get_one::<String>("set") {
-        let mut parts = set_value.splitn(2, '=');
-        let key = parts.next().expect("Invalid format for --set");
-        let value = parts.next().expect("Invalid format for --set");
-        config.set_value(key, value);
-        config.save(config_file_path.to_str().unwrap()).expect("Failed to save config");
-        println!("Configuration updated successfully.");
-        return true;
-    }
-
+pub fn handle_config_edit(matches: &ArgMatches, config: &mut Config, config_file_path: &PathBuf) -> bool {
     if matches.get_flag("edit") {
         open_config_file_in_editor(config_file_path);
         return true;
@@ -97,10 +85,14 @@ fn open_config_file_in_editor(config_file_path: &PathBuf) {
         .expect("Failed to open editor");
 }
 
-pub fn get_adapter_config(config: &Config) -> AdapterConfig {
-    match config.default.adapter.as_str() {
-        "openai_adapter" => config.openai_adapter.clone(),
-        "claude_adapter" => config.claude_adapter.clone(),
-        _ => panic!("Unsupported adapter specified in the configuration"),
+pub fn get_adapter_config(config: &Config) -> &AdapterConfig {
+    &config.adapter
+}
+
+pub fn get_adapter_function_calling_config(adapter_config: &AdapterConfig) -> Option<&FunctionCallingConfig> {
+    match adapter_config {
+        AdapterConfig::OpenAI(config) => config.function_calling_config.as_ref(),
+        AdapterConfig::Claude(config) => config.function_calling_config.as_ref(),
+        AdapterConfig::Zhipu(config) => config.function_calling_config.as_ref(),
     }
 }

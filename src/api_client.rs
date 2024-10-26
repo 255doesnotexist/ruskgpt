@@ -4,6 +4,7 @@ use std::{error::Error, pin::Pin};
 use futures::{Stream, StreamExt, TryStreamExt};
 use serde_json::Value;
 use log::{info, error};
+use crate::config::AdapterConfig;
 use crate::process_response;
 
 pub struct ApiClient {

@@ -3,16 +3,16 @@ use crate::config::AdapterConfig;
 use futures::StreamExt;
 use log::error;
 
-pub async fn process_response_stream(adapter_config: AdapterConfig, prompt: &str) {
+pub async fn process_response_stream(adapter_config: &AdapterConfig, prompt: &str) {
     match adapter_config {
         AdapterConfig::OpenAI(config) => {
-            process_openai_request(ApiClient::new(AdapterConfig::OpenAI(config)), prompt).await;
+            process_openai_request(ApiClient::new(AdapterConfig::OpenAI(config.clone())), prompt).await;
         },
         AdapterConfig::Claude(config) => {
-            process_claude_request(ApiClient::new(AdapterConfig::Claude(config)), prompt).await;
+            process_claude_request(ApiClient::new(AdapterConfig::Claude(config.clone())), prompt).await;
         },
         AdapterConfig::Zhipu(config) => {
-            process_zhipu_request(ApiClient::new(AdapterConfig::Zhipu(config)), prompt).await;
+            process_zhipu_request(ApiClient::new(AdapterConfig::Zhipu(config.clone())), prompt).await;
         },
     }
 }

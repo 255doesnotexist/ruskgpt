@@ -5,8 +5,11 @@ mod cli;
 mod config_handler;
 mod api;
 mod process_response;
+mod functional_calling;
 
+use api_client::ApiClient;
 use config::Config;
+use functional_calling::{list_function_declarations, load_function_declaration};
 use tokio::main;
 
 #[main]
@@ -17,6 +20,19 @@ async fn main() {
     // Parse command line arguments
     let matches = cli::parse_command_line_arguments();
 
+    // Check if list-functions flag is set
+    if matches.get_flag("list-functions") {
+        let functions = list_function_declarations().unwrap();
+        for function in functions {
+            println!("Function: {}", function.name);
+            println!("Description: {}", function.description);
+            for param in function.parameters {
+            println!("  Param: {} ({}) - {}", param.name, param.param_type, param.description);
+            }
+        }
+        return;
+    }
+
     // Determine config file path
     let config_file_path = config_handler::get_config_file_path(&matches);
 
@@ -25,7 +41,22 @@ async fn main() {
         .expect("Failed to load config");
 
     // Handle configuration updates or editing
-    if config_handler::handle_config_update_or_edit(&matches, &mut config, &config_file_path) {
+    if config_handler::handle_config_edit(&matches, &mut config, &config_file_path) {
+        return;
+    }
+
+    let list_functions = matches.get_flag("list-functions");
+    if let Some(function_name) = matches.get_one::<String>("load-function") {
+        match load_function_declaration(function_name) {
+            Ok(function) => {
+                println!("Function: {}", function.name);
+                println!("Description: {}", function.description);
+                for param in function.parameters {
+                    println!("  Param: {} ({}) - {}", param.name, param.param_type, param.description);
+                }
+            }
+            Err(e) => eprintln!("Error loading function: {}", e),
+        }
         return;
     }
 
@@ -36,6 +67,17 @@ async fn main() {
     // Get adapter config
     let adapter_config = config_handler::get_adapter_config(&config);
 
-    // Process response stream based on adapter config
-    api::process_response_stream(adapter_config, prompt).await;
+    // Check if agent functionality is enabled
+    let enable_agent = matches.get_flag("agent");
+
+    // Create API client
+    let client = ApiClient::new(adapter_config.clone());
+
+    if enable_agent {
+        // Placeholder for future workflow logic
+        panic!("Agent functionality is not yet implemented");
+    } else {
+        // Process response stream
+        api::process_response_stream(adapter_config, prompt).await;
+    }
 }

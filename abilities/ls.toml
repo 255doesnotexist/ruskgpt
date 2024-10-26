@@ -1,0 +1,19 @@
+name = "ls"
+description = "List directory contents"
+[[parameters]]
+name = "path"
+param_type = "string"
+description = "The path of the directory to list"
+required = true
+
+[[parameters]]
+name = "all"
+param_type = "boolean"
+description = "Include hidden files"
+required = false
+
+[[parameters]]
+name = "long"
+param_type = "boolean"
+description = "Use a long listing format"
+required = false
