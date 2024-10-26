@@ -11,6 +11,7 @@ Yet another async AskGPT CLI client powered by Rust.
 - Asynchronous interactions with GPT models
 - Configuration management
 - Easy-to-use command-line interface
+- Shell workflows based on function calling (Still working in progress)
 
 ## Installation
 
@@ -41,12 +42,6 @@ To open the configuration file in the default editor, use the -e or --edit optio
 
 ```sh
 ruskgpt -e
-```
-
-To just set a configuration value, use the --set option:
-
-```sh
-ruskgpt --set key=value
 ```
 
 You can specify a configuration file with the --config option:
